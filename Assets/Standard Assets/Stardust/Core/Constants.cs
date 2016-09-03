@@ -1,5 +1,9 @@
 ﻿namespace Stardust
 {
+    public static class Constants
+    {
+        public const string EditorMenuPrefix = "Stardust";
+    }
 	public static class ServiceNames
 	{
 		public const string LogService = "ILogService";
@@ -22,5 +26,11 @@
 		/// </summary>
 		public static readonly string Resources = "resources";
 	}
+#if UNITY_EDITOR
+    public static class EditorPrefKeys
+    {
+        public static readonly string ResourceManagerSimulationMode = "Stardust_Resource_Simulation";
+        public static readonly string BuildOutputPath = "Stardust_BuildOutputPath";
+    }
+#endif
 }
-

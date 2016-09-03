@@ -4,6 +4,9 @@
 
 	public interface IResourceService : IGameService
 	{
-		T LoadResource<T> (string bundleName, string resourceName) where T: Component;
-	}
+        T LoadAsset<T>(string assetBundleName, string assetName, bool unloadBundleImmediately = false) where T : UnityEngine.Object;
+        AssetBundle LoadAssetBundle(string assetBundleName);
+        void LoadLevel(string assetBundleName, string levelName, bool isAdditive);
+        AsyncOperation LoadLevelAsync(string assetBundleName, string levelName, bool isAdditive);
+    }
 }

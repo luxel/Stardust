@@ -7,7 +7,7 @@
 	using Stardust.Utilities;
 	using Stardust.Utilities.ObjectDb;
 
-	public sealed class ResourceService : GameServiceBase
+	public sealed class ResourceService : GameServiceBase, IResourceService
 	{	
 		#region static members
 
@@ -31,46 +31,30 @@
 
 			return AssetBundle.LoadFromFile(path);
 		}
-		#endregion
+        #endregion
 
-		private SimpleObjectDB<string, ResourceItem> data = new SimpleObjectDB<string, ResourceItem>(Databases.Resources);
+        private ResourceManager manager;
 
-		private int gameVersion = 0;
+        public T LoadAsset<T>(string assetBundleName, string assetName, bool unloadBundleImmediately = false) where T : UnityEngine.Object
+        {
+            return manager.LoadAsset<T>(assetBundleName, assetName, unloadBundleImmediately);
+        }
+        public AssetBundle LoadAssetBundle(string assetBundleName)
+        {
+            return manager.LoadAssetBundle(assetBundleName);
+        }
+        public void LoadLevel(string assetBundleName, string levelName, bool isAdditive)
+        {
+            manager.LoadLevel(assetBundleName, levelName, isAdditive);
+        }
+        public AsyncOperation LoadLevelAsync(string assetBundleName, string levelName, bool isAdditive)
+        {
+            return manager.LoadLevelAsync(assetBundleName, levelName, isAdditive);
+        }
 
-		public T LoadResource<T> (string bundleName, string resourceName) where T: Component
-		{
-			string key = GetStringKey(bundleName, resourceName);
-			T resource = null;
-
-			// Whether to load from downloaded asset bundles.
-			bool loadFromBundle = false;
-			// Whether to load from the built-in package resources.
-			bool loadFromPackage = false;
-			// Whether to load from the cache.
-			bool loadFromCache = false;
-
-			// Cache checking
-
-			// Actual loading.
-
-			if (loadFromPackage)
-			{
-				resource = Resources.Load<T>(key);
-			}
-			else if (loadFromBundle)
-			{
-				// TODO: Loads it from the bundle.
-			}
-
-			return resource;
-		}
-
-		protected override void OnStartup ()
-		{
-			// Load the DB locally
-			data.Load();
-			// TODO: Calculate the current game version.
-
-		}
+        protected override void OnStartup ()
+        {
+            manager = new Services.Resources.ResourceManager();
+        }
 	}
 }

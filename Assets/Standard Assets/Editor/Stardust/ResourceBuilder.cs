@@ -1,10 +1,10 @@
-﻿namespace Stardust.Editor
+﻿#if UNITY_EDITOR
+namespace Stardust.Editor
 {
     using UnityEngine;
     using UnityEditor;
     using System.Collections;
     using System.IO;
-    using Utilities;
 
     public class ResourceBuilder
     {
@@ -42,8 +42,12 @@
 
         protected virtual void PerformBuild()
         {
-            var options = BuildAssetBundleOptions.None;
+            var options = BuildAssetBundleOptions.UncompressedAssetBundle;
             BuildPipeline.BuildAssetBundles(outputPath, options, EditorUserBuildSettings.activeBuildTarget);
+            //AssetBundle bundle = AssetBundle.LoadFromFile(Path.Combine(outputPath, "characters"));
+            //string[] assets = bundle.GetAllAssetNames();
+            //Debug.Log(EditorUtilities.GetStringArray(assets));
         }
     }
-}
+} 
+#endif

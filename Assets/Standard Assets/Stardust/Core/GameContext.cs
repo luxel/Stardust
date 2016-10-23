@@ -42,7 +42,6 @@
 
 		protected virtual void BindServices()
 		{
-			injectionBinder.Bind<ILogService>().To<Stardust.Services.Log.LogService>().ToSingleton();
 		}
 	}
 }

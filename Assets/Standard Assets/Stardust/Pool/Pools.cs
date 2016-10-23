@@ -1,4 +1,4 @@
-﻿namespace Stardust.Pool
+﻿namespace Stardust
 {
 	using System;
 	using System.Collections;

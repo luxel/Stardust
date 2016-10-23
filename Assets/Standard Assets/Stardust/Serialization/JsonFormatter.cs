@@ -1,4 +1,4 @@
-﻿namespace Stardust.Serialization
+﻿namespace Stardust
 {
 	using UnityEngine;
 	using System.IO;

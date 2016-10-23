@@ -5,7 +5,6 @@
 	using System.IO;
 	using Stardust;
 	using Stardust.Utilities;
-	using Stardust.Utilities.ObjectDb;
 
 	public sealed class ResourceService : GameServiceBase, IResourceService
 	{	

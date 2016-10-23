@@ -1,4 +1,4 @@
-﻿namespace Stardust.Utilities
+﻿namespace Stardust
 {
 	using System;
 

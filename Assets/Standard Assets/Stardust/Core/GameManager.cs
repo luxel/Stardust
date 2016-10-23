@@ -145,7 +145,7 @@
 		private void InitializeServices()
 		{
 			// Now prepare the Stardust built-in services
-			GameService.ResolveService<ILogService>();
+//			GameService.ResolveService<ILogService>();
 
 			// Child class hook
 			OnInitializeServices();

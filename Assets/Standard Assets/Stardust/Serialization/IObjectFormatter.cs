@@ -1,4 +1,4 @@
-﻿namespace Stardust.Serialization
+﻿namespace Stardust
 {
 	using System;
 	using System.IO;

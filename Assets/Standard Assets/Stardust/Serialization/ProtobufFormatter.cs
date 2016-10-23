@@ -1,4 +1,4 @@
-﻿namespace Stardust.Serialization
+﻿namespace Stardust
 {
 	using System.Collections;
 	using System.IO;
@@ -14,7 +14,7 @@
 		}
 		public T Deserialize<T>(Stream stream)
 		{
-			return ProtoBuf.Serializer.Deserialize<T>(stream);
+            return ProtoBuf.Serializer.Deserialize<T>(stream);
 		}
 		public T DeserializeInto<T>(Stream stream, T instance)
 		{

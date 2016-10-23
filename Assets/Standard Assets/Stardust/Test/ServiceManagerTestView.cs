@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using strange;
 using strange.extensions.mediation.impl;
 using Stardust;
-using Stardust.Pool;
 using Stardust.Services;
 
 public class ServiceManagerTestView : View {
@@ -42,11 +41,11 @@ public class ServiceManagerTestView : View {
 
 	// Update is called once per frame
 	void Update () {
-		if (service == null)
-		{
-			Debug.LogError("Couldn't find service!");
-			return;
-		}
+//		if (service == null)
+//		{
+//			Debug.LogError("Couldn't find service!");
+//			return;
+//		}
 		TestFindServicePerformance();
 	}
 
@@ -56,7 +55,7 @@ public class ServiceManagerTestView : View {
 
 	private bool findServiceWithType = true;
 
-	private ILogService service;
+//	private ILogService service;
 
 	void Switch()
 	{
@@ -95,7 +94,7 @@ public class ServiceManagerTestView : View {
 	{
 		for (int i = 0; i < TestLoopCount; i ++)
 		{
-			service = ServiceManager.GetService<ILogService>();
+//			service = ServiceManager.GetService<ILogService>();
 
 		}
 	}
@@ -107,7 +106,7 @@ public class ServiceManagerTestView : View {
 	{
 		for (int i = 0; i < TestLoopCount; i ++)
 		{
-			service = ServiceManager.GetService<ILogService>("ILogService");
+//			service = ServiceManager.GetService<ILogService>("ILogService");
 		}
 	}
 
@@ -118,7 +117,7 @@ public class ServiceManagerTestView : View {
 	{
 		for (int i = 0; i < TestLoopCount; i ++)
 		{
-			service = GameManager.GetInstance<ILogService>();
+//			service = GameManager.GetInstance<ILogService>();
 		}
 	}
 	#endregion

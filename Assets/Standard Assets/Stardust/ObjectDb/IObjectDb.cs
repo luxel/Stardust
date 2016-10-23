@@ -1,4 +1,4 @@
-﻿namespace Stardust.Utilities
+﻿namespace Stardust
 {
 	using System;
 	using System.Collections;
@@ -39,14 +39,6 @@
 		/// Clears all the data in the DB.
 		/// </summary>
 		void Clear();
-		/// <summary>
-		/// Saves the DB to the file system.
-		/// </summary>
-		void Save();
-		/// <summary>
-		/// Loads the DB from file.
-		/// </summary>
-		void Load();
 		/// <summary>
 		/// Loads the DB from another collection
 		/// </summary>

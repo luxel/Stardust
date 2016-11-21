@@ -15,20 +15,48 @@
         /// </summary>
         [SerializeField]
         public string AtlasName;   
+        [SerializeField]
+        private SpriteRenderer spriteRenderer = null;
+        [SerializeField]
+        private string spriteName = null;
 
-        private SpriteRenderer renderer = null;
+        public string SpriteName
+        {
+            get
+            {
+                return spriteName;
+            }
+        }
 
         void Awake()
         {
-            if (renderer == null)
+            if (spriteRenderer == null)
             {
-                renderer = GetComponent<SpriteRenderer>();
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            }
+            if (!string.IsNullOrEmpty(spriteName))
+            {
+                SetSprite(spriteName);
             }
         }
 
         public void SetSprite(string spriteName)
         {
-            renderer.sprite = UIAtlasManager.FindSprite(AtlasName, spriteName);
+            Sprite sprite = UIAtlasManager.FindSprite(AtlasName, spriteName);
+            this.spriteName = spriteName;
+
+            if (sprite != null)
+            {
+                spriteRenderer.sprite = sprite;
+                if (!spriteRenderer.enabled)
+                {
+                    spriteRenderer.enabled = true;
+                }
+            }
+            else
+            {
+                spriteRenderer.enabled = false;
+            }
         }
     }
 }

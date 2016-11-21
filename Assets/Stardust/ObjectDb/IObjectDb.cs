@@ -35,6 +35,10 @@
 		/// Removes an item with specified id.
 		/// </summary>
 		ObjectType Remove(IdType id);
+        /// <summary>
+        /// Removes an item
+        /// </summary>
+        ObjectType Remove(ObjectType item);
 		/// <summary>
 		/// Clears all the data in the DB.
 		/// </summary>
@@ -45,4 +49,18 @@
 		/// <param name="stream">Stream.</param>
 		void LoadFrom(ICollection<ObjectType> collection);
 	}
+    /// <summary>
+	/// And file based object db which persists data to files.
+	/// </summary>
+	public interface IObjectFileDb<IdType, ObjectType> : IObjectDb<IdType, ObjectType> where ObjectType : IObjectWithId<IdType>
+    {
+        /// <summary>
+        /// Saves the data to a file.
+        /// </summary>
+        void Save();
+        /// <summary>
+        /// Loads the data from a file.
+        /// </summary>
+        void Load();
+    }
 }

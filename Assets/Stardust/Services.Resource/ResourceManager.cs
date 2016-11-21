@@ -18,6 +18,11 @@
         /// </summary>
         public int ReferencedCount { get; private set; }
 
+        /// <summary>
+        /// This bundle will be cached permanently.
+        /// </summary>
+        public bool PermanentCache;
+
         internal event Action unload;
 
         internal void OnUnload()
@@ -47,15 +52,76 @@
     public class ResourceManager
     {
         protected Dictionary<string, LoadedAssetBundle> bundleCache = new Dictionary<string, LoadedAssetBundle>();
-  
+
+        private List<string> tempList = new List<string>();
+
+        public T[] LoadAssets<T>(string assetBundleName)
+            where T : UnityEngine.Object
+        {
+            return LoadAssets<T>(assetBundleName, false);
+        }
+        public T[] LoadAssets<T>(string assetBundleName, bool permanentCache, bool unloadBundleImmediately = false)
+            where T : UnityEngine.Object
+        {
+            T[] assets = null;
+            if (string.IsNullOrEmpty(assetBundleName))
+            {
+#if UNITY_EDITOR
+                Debug.LogWarningFormat("Loading asset with empty name: {0}", assetBundleName);
+#endif
+                return assets;
+            }
+#if UNITY_EDITOR
+            if (EditorStardustSettings.ResourcesSimulationMode || !EditorApplication.isPlaying)
+            {
+                string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(assetBundleName);
+                if (assetPaths == null || assetPaths.Length == 0)
+                {
+                    Debug.LogError(string.Format("[ResourceManager] No asset is found with name {0}", assetBundleName));
+                    return assets;
+                }
+                assets = new T[assetPaths.Length];
+                for (int i = 0; i < assetPaths.Length; i ++)
+                {
+                    assets[i] = AssetDatabase.LoadMainAssetAtPath(assetPaths[i]) as T;
+                }
+                return assets;
+            }
+#endif
+            AssetBundle bundle = LoadAssetBundle(assetBundleName, permanentCache);
+
+            if (bundle != null)
+            {
+                assets = bundle.LoadAllAssets<T>();
+                if (unloadBundleImmediately)
+                {
+                    UnloadBundle(assetBundleName, bundle);
+                }
+            }
+
+            return assets;
+
+        }
+        public T LoadAsset<T>(string assetBundleName, string assetName)
+            where T : UnityEngine.Object
+        {
+            return LoadAsset<T>(assetBundleName, assetName, false);
+        }
         /// <summary>
         /// Loads an asset from specified assetbundle.
         /// </summary>
-        public T LoadAsset<T>(string assetBundleName, string assetName, bool unloadBundleImmediately = false)
-            where T : UnityEngine.Object
+        public T LoadAsset<T>(string assetBundleName, string assetName, bool permanentCache, bool unloadBundleImmediately = false)
+            where T: UnityEngine.Object
         {
             T asset = null;
 
+            if (string.IsNullOrEmpty(assetName) || string.IsNullOrEmpty(assetBundleName))
+            {
+#if UNITY_EDITOR
+                Debug.LogWarningFormat("Loading asset with empty name: {0}-{1}", assetBundleName, assetName);
+#endif
+                return asset;
+            }
 #if UNITY_EDITOR
             if (StardustEditorSettings.ResourcesSimulationMode)
             {
@@ -70,7 +136,7 @@
             }
 #endif
 
-            AssetBundle bundle = LoadAssetBundle(assetBundleName);
+            AssetBundle bundle = LoadAssetBundle(assetBundleName, permanentCache);
 
             if (bundle != null)
             {
@@ -82,6 +148,22 @@
             }
 
             return asset;
+        }
+
+        public void UnloadAllBundles()
+        {
+            tempList.Clear();
+            foreach (var item in bundleCache.Keys)
+            {
+                if (!bundleCache[item].PermanentCache)
+                {
+                    tempList.Add(item);
+                }
+            }
+            for (int i = 0; i < tempList.Count; i ++)
+            {
+                UnloadBundle(tempList[i]);
+            }
         }
 
         /// <summary>
@@ -96,10 +178,19 @@
             bundle.Unload(false);
         }
 
+        public void UnloadBundle(string assetBundleName)
+        {
+            if (bundleCache.ContainsKey(assetBundleName))
+            {
+                AssetBundle bundle = bundleCache[assetBundleName].AssetBundle;
+                bundleCache.Remove(assetBundleName);
+                bundle.Unload(false);
+            }
+        }
         /// <summary>
         /// Loads an assetbundle.
         /// </summary>
-        public AssetBundle LoadAssetBundle(string assetBundleName)
+        public AssetBundle LoadAssetBundle(string assetBundleName, bool permanentCache = false)
         {
             AssetBundle bundle = null;
 
@@ -124,7 +215,9 @@
             // 3. add the bundle into cache
             if (bundle != null && loadedBundle == null)
             {
-                bundleCache.Add(assetBundleName, new LoadedAssetBundle(bundle));
+                var loaded = new LoadedAssetBundle(bundle);
+                loaded.PermanentCache = permanentCache;
+                bundleCache.Add(assetBundleName, loaded);
             }
 
             return bundle;

@@ -37,6 +37,10 @@ namespace Stardust.Editor
         /// </summary>
         protected string outputAssetsPath;
 
+        protected int buildStartTimestamp;
+        
+        protected VersionInfo version;
+
         protected bool appendVersionStringInOutputPath = true;
 
         protected string LastUsedOutputPath
@@ -77,6 +81,8 @@ namespace Stardust.Editor
 
         public void BuildPlayer()
         {
+            GetBuildVersion();
+
             versionString = GenerateVersionString();
             Log("Version string is {0}", versionString);
 
@@ -156,7 +162,7 @@ namespace Stardust.Editor
 
         protected virtual string GenerateVersionString()
         {
-            return DateTime.Now.ToString("yyyy-MM-dd_HH-mm");
+            return version.Version + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm");
         }
 
         protected virtual void SelectLevels()
@@ -265,6 +271,21 @@ namespace Stardust.Editor
             builder.BuildAssetBundles();
         }
 
+        protected virtual void GetBuildVersion()
+        {
+            VersionInfoDb db = new VersionInfoDb();
+            db.Load();
+
+            // Update version.
+            version = db.GetBuildVersion();
+
+            buildStartTimestamp = DateTimeUtility.GetCurrentUnixTimestamp();
+
+            Log("Build version is {0}", version.Version);
+
+            AssetDatabase.Refresh();
+        }
+
         protected virtual void CleanOutputPath()
         {
             switch (EditorUserBuildSettings.activeBuildTarget)
@@ -294,8 +315,13 @@ namespace Stardust.Editor
 
         protected virtual void CreateBuildLog()
         {
+            VersionInfoDb db = new VersionInfoDb();
+            db.Load();
+            db.UpdateBuildTime(buildStartTimestamp);
+
             string buildLog = Path.Combine(outputPath, string.Format("{0}.txt", versionString));
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
+            builder.Append("Version: \t").Append(version.Version).AppendLine();
             builder.Append("Build time:\t").Append(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).AppendLine();
             builder.Append("Target Platform:\t").Append(EditorUserBuildSettings.activeBuildTarget).AppendLine();
             builder.Append("Build machine:\t").Append(System.Net.Dns.GetHostName()).AppendLine();

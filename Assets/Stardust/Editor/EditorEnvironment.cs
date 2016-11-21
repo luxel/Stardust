@@ -43,7 +43,7 @@ namespace Stardust.Editor
         private static string _EditorDataFilePath;
         /// <summary>
         /// Path to the data file assets used under editor.
-        /// E.g. "Assets/KUKRTools/Data"
+        /// E.g. "Assets/Stardust/Data"
         /// </summary>
         public static string EditorDataFilePath
         {
@@ -151,13 +151,13 @@ namespace Stardust.Editor
         public static string GetPlatformSpecificAssetPathForCurrentUnity(string assetFolderName)
         {
             // Assuming assetFolderName = "mono"
-            // E.g. Assets/KUKRTools/mono
+            // E.g. Assets/Stardust/mono
             string path = Path.Combine(EditorAssetsPath, assetFolderName);
 
-            // E.g. Assets/KUKRTools/mono/5.4
+            // E.g. Assets/Stardust/mono/5.4
             path = Path.Combine(path, CurrentUnityMajorVersion);
 
-            // E.g. Assets/KUKRTools/mono/5.4/PC/x86
+            // E.g. Assets/Stardust/mono/5.4/PC/x86
             return Path.Combine(path, CurretPlatformName);
 
         }
@@ -165,10 +165,10 @@ namespace Stardust.Editor
         public static string GetPlatformSpecificAssetPath(string assetFolderName)
         {
             // Assuming assetFolderName = "mono"
-            // E.g. Assets/KUKRTools/mono
+            // E.g. Assets/Stardust/mono
             string path = Path.Combine(EditorAssetsPath, assetFolderName);
 
-            // E.g. Assets/KUKRTools/mono/PC/x86
+            // E.g. Assets/Stardust/mono/PC/x86
             return Path.Combine(path, CurretPlatformName);
         }
     } 

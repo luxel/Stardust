@@ -31,7 +31,7 @@
             List = new List<ObjectType>();
         }
 
-		public ObjectType Get(int index)
+		public virtual ObjectType Get(int index)
 		{
 			ObjectType item = default(ObjectType);
 			if (index >= 0 && index < List.Count)
@@ -51,13 +51,14 @@
 			}
 			return item;
 		}
-		public ObjectType Add(ObjectType item)
+		public virtual ObjectType Add(ObjectType item)
 		{
 			List.Add(item);
 			Data[item.Id] = item;
 			return item;
 		}
-		public ObjectType Remove(IdType id)
+
+		public virtual ObjectType Remove(IdType id)
 		{
 			ObjectType item = default(ObjectType);
 			if (Data.ContainsKey(id))
@@ -68,6 +69,11 @@
 			}
 			return item;
 		}
+
+        public virtual ObjectType Remove(ObjectType item)
+        {
+            return Remove(item.Id);
+        }
 
 		public void Clear()
 		{

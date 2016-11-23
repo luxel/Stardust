@@ -17,7 +17,7 @@
 
         private DataRequestContainer m_currentRequest;
 
-        private DataServiceSettings m_settings;
+        //private DataServiceSettings m_settings;
 
         public bool AcceptsNewRequest
         {
@@ -33,7 +33,7 @@
         /// </summary>
         public void Initialize(DataServiceSettings settings)
         {
-            m_settings = settings;
+            //m_settings = settings;
         }
         /// <summary>
         /// Makes a request.

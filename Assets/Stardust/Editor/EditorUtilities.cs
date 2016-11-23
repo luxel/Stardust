@@ -182,7 +182,7 @@ namespace Stardust.Editor
                         }
                     }
                 }
-                catch(InvalidCastException e)
+                catch(InvalidCastException)
                 {
                     Debug.LogErrorFormat("Object {0} unable to cast to GameObject", o.name);
                 }
